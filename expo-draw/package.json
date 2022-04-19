@@ -1,0 +1,65 @@
+{
+  "_from": "git+https://github.com/MarangoniEduardo/expo-draw.git",
+  "_id": "expo-draw@0.0.5",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/expo-draw",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/MarangoniEduardo/expo-draw",
+    "rawSpec": "git+https://github.com/MarangoniEduardo/expo-draw",
+    "saveSpec": "git+https://github.com/MarangoniEduardo/expo-draw.git",
+    "fetchSpec": "https://github.com/MarangoniEduardo/expo-draw.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/MarangoniEduardo/expo-draw.git#5540c3c64daf1f22d9efa019e15fa82b1e354dcb",
+  "_spec": "git+https://github.com/MarangoniEduardo/expo-draw",
+  "_where": "/Users/matthewhorner/Desktop/AppDevelopment/ReactNative/Painter",
+  "author": {
+    "name": "Eduardo Marangoni"
+  },
+  "bugs": {
+    "url": "https://github.com/LucaFenner/expo-draw/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "humps": "^2.0.1"
+  },
+  "deprecated": false,
+  "description": "Drawing library for expo using svg.",
+  "homepage": "https://github.com/LucaFenner/expo-draw#readme",
+  "keywords": [
+    "react-native",
+    "svg",
+    "draw",
+    "android",
+    "ios",
+    "mobile",
+    "expo",
+    "sketch",
+    "signaturepad"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "expo-draw",
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-svg": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucaFenner/expo-draw.git"
+  },
+  "scripts": {
+    "deploy": "npm publish",
+    "test": "echo \"Error: no tests currently\" && exit 1"
+  },
+  "version": "0.0.5"
+}
