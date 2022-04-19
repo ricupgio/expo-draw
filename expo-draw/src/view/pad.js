@@ -4,9 +4,10 @@ import {
   PanResponder,
   StyleSheet,
   TouchableOpacity,
-  Text,
+  Text
 } from 'react-native'
-import Svg, { G, Path, Rect, Circle, } from 'react-native-svg';
+import Svg, { G, Path } from 'react-native-svg';
+
 import Pen from '../tools/pen'
 import Point from '../tools/point'
 
@@ -19,6 +20,7 @@ export default class Whiteboard extends React.Component {
       currentPoints: [],
       previousStrokes: [],
       pen: new Pen(),
+      color: 'black'
     }
 
     this._panResponder = PanResponder.create({
@@ -75,11 +77,11 @@ export default class Whiteboard extends React.Component {
 
   onTouch(evt) {
     if (this.props.enabled == false) return;
-    let x, y, timestamp, c, sW, dT
-    [x, y, timestamp, c, sW, dT] = [evt.nativeEvent.locationX, evt.nativeEvent.locationY, evt.nativeEvent.timestamp, this.props.color, this.props.strokeWidth, this.props.drawType]
+    let x, y, timestamp, color
+    [x, y, timestamp, color] = [evt.nativeEvent.locationX, evt.nativeEvent.locationY, evt.nativeEvent.timestamp, this.state.color]
 
     let newCurrentPoints = this.state.currentPoints
-    newCurrentPoints.push({ x, y, timestamp, c, sW, dT })
+    newCurrentPoints.push({ x, y, timestamp,color })
 
     this.setState({
       previousStrokes: this.state.previousStrokes,
@@ -125,82 +127,79 @@ export default class Whiteboard extends React.Component {
     var props = this.props.enabled != false ? this._panResponder.panHandlers : {}
 
     return (
-      <View
+      <View style = {{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        
+         <View
         onLayout={this._onLayoutContainer}
         style={[
           styles.drawContainer,
           this.props.containerStyle,
         ]}>
         <View style={styles.svgContainer} {...props}>
+          
           <Svg style={styles.drawSurface}>
             <G>
               {this.state.previousStrokes.map((e) => {
                 var points = [];
 
                 for (var i in e) {
-                  let newPoint = new Point(e[i].x, e[i].y, e[i].timestamp, e[i].c, e[i].sW)
+                  let newPoint = new Point(e[i].x, e[i].y, e[i].timestamp, e[i].color)
                   points.push(newPoint)
                 }
 
-                if (e[0].dT == "L") {
-                  return (<Path
+                return (<Path
                   key={e[0].timestamp}
                   d={this.state.pen.pointsToSvg(points)}
-                  stroke={e[0].c || '#000000'}
-                  strokeWidth={e[0].sW || 5}
+                  stroke={e[0].color}
+                  strokeWidth={this.props.strokeWidth || 4}
                   fill="none"
                 />)
-                  }
-                  else if (e[0].dT == "R") {
-                    return (<Rect
-                      key={e[0].timestamp}
-                      x={points[0].x}
-                      y={points[0].y}
-                      width={points[points.length - 1].x - points[0].x}
-                      height={points[points.length - 1].y - points[0].y}
-                      strokeWidth={e[0].sW || 5}
-                      stroke={e[0].c || '#000000'}
-                    />)
-                  } else {
-                    return (<Circle key={e[0].timestamp} cx={points[0].x} cy={points[0].y} r={Math.sqrt(Math.pow(points[points.length - 1].x - points[0].x, 2) + Math.pow(points[points.length - 1].y - points[0].y, 2))} strokeWidth={e[0].sW || 5}
-                      stroke={e[0].c || '#000000'}/>)
-                  }
               }
               )
               }
-              {
-              this.props.drawType == "L" || this.state.currentPoints.length <= 1 ?
-                <Path
+              <Path
                 key={this.state.tracker}
                 d={this.state.pen.pointsToSvg(this.state.currentPoints)}
-                stroke={this.props.color || "#000000"}
-                strokeWidth={this.props.strokeWidth || 5}
+                stroke={"red"}
+                strokeWidth={this.props.strokeWidth || 4}
                 fill="none"
-                /> : this.props.drawType == "R" ?
-                <Rect
-                key={this.state.tracker}
-                x={this.state.currentPoints[0].x}
-                y={this.state.currentPoints[0].y}
-                width={this.state.currentPoints[this.state.currentPoints.length - 1].x - this.state.currentPoints[0].x}
-                height={this.state.currentPoints[this.state.currentPoints.length - 1].y - this.state.currentPoints[0].y}
-                strokeWidth={this.props.strokeWidth || 5}
-                stroke={this.props.color || '#000000'}
-                /> :
-                <Circle key={this.state.tracker} cx={this.state.currentPoints[0].x} cy={this.state.currentPoints[0].y} r={Math.sqrt(Math.pow(this.state.currentPoints[this.state.currentPoints.length - 1].x - this.state.currentPoints[0].x, 2) + Math.pow(this.state.currentPoints[this.state.currentPoints.length - 1].y - this.state.currentPoints[0].y, 2))} strokeWidth={this.props.strokeWidth || 5} stroke={this.props.color || '#000000'}/>
-            }
+              />
             </G>
+          
           </Svg>
+         
           {this.props.children}
+      
         </View>
-        <View style={styles.rowView}>
-          <TouchableOpacity onPress={() => this.clear()}>
-            <Text style={styles.labelText}>Clear</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.rewind()}>
-            <Text style={styles.labelText}>Undo</Text>
-          </TouchableOpacity>
-        </View>
+ 
+            
+
       </View>
+      <View style = {{flexDirection: 'row', marginTop: 10}}>
+            <TouchableOpacity
+            style = {styles.button}
+            onPress={() => {this.clear()}}
+            >
+              <Text>clear</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style = {styles.button}
+            onPress={() => {this.rewind()}}
+            >
+              <Text>undo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style = {styles.button}
+            onPress={() => {this.setState({
+              color: 'orange'
+            })}}
+            >
+              <Text>color</Text>
+            </TouchableOpacity>
+
+          </View>
+      </View>
+     
     )
   }
 }
@@ -208,25 +207,20 @@ export default class Whiteboard extends React.Component {
 let styles = StyleSheet.create({
   drawContainer: {
     flex: 1,
-    display: 'flex'
+    display: 'flex',
+
   },
+  button: {
+    width: '20%',
+    height: 40,
+    borderWidth: 1,
+    marginHorizontal: 40
+    
+  },  
   svgContainer: {
     flex: 1,
-    borderWidth: 2,
-
   },
   drawSurface: {
     flex: 1,
-  },
-  rowView: {
-    height: "10%",
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  labelText: {
-    fontWeight: "bold",
-    fontSize: 18,
   },
 })
